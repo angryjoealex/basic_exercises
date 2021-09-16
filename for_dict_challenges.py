@@ -1,3 +1,4 @@
+import collections
 # Задание 1
 # Дан список учеников, нужно посчитать количество повторений каждого имени ученика
 # Пример вывода:
@@ -13,45 +14,9 @@ students1 = [
     {'first_name': 'Петя'},
 ]
 
-
-def count_items_per_dict(input_list):
-    counted = {}
-    for item in input_list:
-        for key, value in item.items():
-            if item[key] not in counted:
-                counted[item[key]] = 1
-            else:
-                counted[item[key]] += 1
-    return counted
-
-
-def count_items_per_list_per_dict(input_list):
-    output = []
-    for counter, content in enumerate(input_list, start=1):
-        counted = {}
-        for item in content:
-            for key, value in item.items():
-                if item[key] not in counted:
-                    counted[item[key]] = 1
-                else:
-                    counted[item[key]] += 1
-        output.insert(counter, [counter, counted])
-    return output
-
-
-def find_max(input):
-    max_num = 0
-    max_name = ''
-    for name, counter in input.items():
-        if counter > max_num:
-            max_num = counter
-            max_name = name
-    return max_name, max_num
-
-
 def check_sex(input):
     sex = ''
-    if is_male.get(input) is True:
+    if is_male.get(input):
         sex = 'Male'
     elif is_male.get(input) is False:
         sex = 'Female'
@@ -61,9 +26,11 @@ def check_sex(input):
 
 
 print('Ex1')
-count = count_items_per_dict(students1)
-for name, counter in count.items():
-    print(f'{name} : {counter}')
+counter = collections.Counter()
+for student in students1:
+    counter[student['first_name']] += 1
+for name in counter:
+    print(f'{name} : {counter[name]}')
 
 # # Задание 2
 # # Дан список учеников, нужно вывести самое часто повторящееся имя
@@ -78,9 +45,12 @@ students2 = [
 ]
 # # ???
 print('\nEx2 \n')
-count = count_items_per_dict(students2)
-max_name, max_num = find_max(count)
-print(f'Most frequent name is {max_name}, counted {max_num} time(s) \n' )
+counter.clear()
+for student in students1:
+    counter[student['first_name']] += 1
+most_common = dict(counter.most_common(1))
+for key, value in most_common.items():
+    print(f'Most frequent name is {key}, counted {value} time(s) \n' )
 
 # # Задание 3
 # # Есть список учеников в нескольких классах, нужно вывести самое частое имя в каждом классе.
@@ -106,11 +76,14 @@ school_students = [
     ],
 ]
 print('\nEx3 \n')
-count = count_items_per_list_per_dict(school_students)
-for school_classes in count:
-    school_class, counted_names = school_classes
-    max_name, max_num = find_max(counted_names)
-    print(f'Most frequent name in class {school_class} is {max_name}, counted {max_num} time(s) \n')
+counter.clear()
+for class_num, students in enumerate(school_students, 1):
+    counter.clear()
+    for student in students:
+        counter[student['first_name']] += 1
+    most_common = dict(counter.most_common(1))
+    for key, value in most_common.items():
+        print(f'Most frequent name in class {class_num} is {key}, counted {value} time(s) \n')
 
 # # ???
 
@@ -135,13 +108,19 @@ is_male = {
 }
 
 print('\nEx4\n')
+counter.clear()
 for school_class in school:
+    counter.clear()
     sex_list_class = []
-    for num, content in enumerate(school_class.get('students'), start=1):
-        name = content.get('first_name')
-        sex_list_class.insert(num, {'sex': check_sex(name)})
-    sex_counted = count_items_per_dict(sex_list_class)
-    print(f"Class {school_class.get('class')} has females: {sex_counted.get('Female',0)}, males: {sex_counted.get('Male',0)}")
+    class_letter =school_class.get('class')
+    for students in school_class.get('students'):
+        name = students.get('first_name')
+        sex_list_class.append({'sex': check_sex(name)})
+    for sex in sex_list_class:
+        counter[sex['sex']] += 1
+    females = counter['Female']
+    males = counter['Male']
+    print(f"Class {class_letter} has females: {females}, males: {males}")
 
 # # Задание 5
 # # По информации о учениках разных классов нужно найти класс, в котором больше всего девочек и больше всего мальчиков
@@ -161,23 +140,26 @@ is_male = {
     'Миша': True,
 }
 # # ???
-
+print('\nEx5\n')
+max_sex_per_class = {}
 female_num = 0
 male_num = 0
+
 for school_class in school:
+    counter.clear()
     sex_list_class = []
-    for num, content in enumerate(school_class.get('students'), start=1):
-        name = content.get('first_name')
-        sex_list_class.insert(num, {'sex': check_sex(name)})
-    sex_counted = count_items_per_dict(sex_list_class)
-    sex, num = find_max(sex_counted)
-    if sex == 'Female':
-        if num > female_num:
-            female_class = school_class.get('class')
-            female_num = num
-    elif sex == 'Male':
-        if num > male_num:
-            male_class = school_class.get('class')
-            male_num = num
-print(f'The class with most females is {female_class} with {female_num} female(s) \n'  )   
-print(f'The class with most males is {male_class} with {male_num} male(s)  \n')    
+    class_letter = school_class.get('class')
+    for students in school_class.get('students'):
+        name = students.get('first_name')
+        sex_list_class.append({'sex': check_sex(name)})
+    for sex in sex_list_class:
+        counter[sex['sex']] += 1
+    most_common = counter.most_common(1)
+    if counter['Female'] > female_num:
+        Female = class_letter
+        max_sex_per_class.update({'Female': class_letter})
+    if counter['Male'] > male_num:
+        Male = class_letter
+        max_sex_per_class.update({'Male': class_letter})       
+for sex, school_class in max_sex_per_class.items():
+    print(f'The class with most {sex} is {school_class}')

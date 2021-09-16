@@ -5,8 +5,8 @@ names = ['Оля', 'Петя', 'Вася', 'Маша']
 # ???\
 ex1 = 'Excersise 1 \n'
 for name in names:
-    ex1 += name+'\n'
-print(ex1) 
+   print(name) 
+
 # Задание 2
 # Необходимо вывести имена всех учеников из списка, рядом с именем показать количество букв в нём
 # Пример вывода:
@@ -15,8 +15,8 @@ print(ex1)
 ex2 = 'Excersise 2 \n'
 names2 = ['Оля', 'Петя', 'Вася', 'Маша']
 for name2 in names2:
-    ex2 += f'{name2}: {len(name2)} \n'
-print(ex2)
+    print( f'{name2}: {len(name2)}')
+
 # Задание 3
 # Необходимо вывести имена всех учеников из списка, рядом с именем вывести пол ученика
 ex3 = 'Excersise 3 \n'
@@ -28,13 +28,14 @@ is_male = {
 }
 names3 = ['Оля', 'Петя', 'Вася', 'Маша', 'Бобр']
 for name3 in names3:
-    if is_male.get(name3) is True:
-        ex3 += name3 + ' is male \n'
-    elif is_male.get(name3) is False:
-        ex3 += name3 + ' is female \n'
+    sex = is_male.get(name3)
+    if sex:
+        print(f'{name3} is male')
+    elif sex is False:
+        print(f'{name3} is female')
     else:
-        ex3 += 'Sex is not defined for ' + name3 + '\n'
-print(ex3)
+        print(f'Sex is not defined for {name3}')
+
 
 # Задание 4
 # Даны группу учеников. Нужно вывести количество групп и для каждой группы – количество учеников в ней
@@ -48,10 +49,11 @@ groups4 = [
     ['Вася', 'Маша', 'Саша', 'Женя'],
     ['Оля', 'Петя', 'Гриша'],
 ]
-ex4 += f'Total groups: {len(groups4)} \n'
-for group in groups4:
-    ex4 += f'Group {groups4.index(group)+1} has {len(group)} student(s) \n'
-print(ex4)
+ttl_groups = len(groups4)
+print(f'Total groups: {ttl_groups}')
+for group_number, group in enumerate(groups4,1):
+    student_count = len(group) 
+    print(f'Group {group_number} has {student_count} student(s)')
 
 # # Задание 5
 # # Для каждой пары учеников нужно с новой строки перечислить учеников, которые в неё входят
@@ -64,11 +66,6 @@ groups5 = [
     ['Оля', 'Петя', 'Гриша'],
     ['Вася', 'Маша', 'Саша', 'Женя'],
 ]
-for group in groups5:
-    students = ''
-    for student in group:
-        students += student
-        if student != group[-1]:
-            students += ', '
-    ex5 += f'Group {groups5.index(group)+1} has following student(s) {students} \n'
-print(ex5)
+for group_number, students in enumerate(groups5, 1):
+    all_students = ", ".join(students)
+    print(f'Group {group_number} has following student(s) {all_students} \n')

@@ -37,10 +37,8 @@ for word in words:
 # Вывести усреднённую длину слова в предложении
 sentence = 'Мы приехали в гости'
 words = sentence.split()
-total = 0
-counter = 0
+count_letter = []
 for word in words:
-    total += len(word)
-    counter += 1
-avg = total / counter
-print(f'The average word lenght is {avg}')
+    count_letter.append(len(word))
+avg = sum(count_letter)/len(sentence.split())
+print(avg)
